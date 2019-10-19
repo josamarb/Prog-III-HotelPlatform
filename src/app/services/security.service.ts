@@ -1,26 +1,28 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { UserModel } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecurityService {
-
-userLogged: boolean= false;
-name: String = '';
+  userInfo = new BehaviorSubject<UserModel>(new UserModel);
   constructor() { }
 
-isUserLogged(){
-  return {logged: this.userLogged, name: this.name};
+getUserInfo(){
+  return this.userInfo.asObservable();
 }
 loginUser(username: String, pass: String){
   let user = null;
   if(username == "admin@gmail.com" && pass == "1234567890"){
-    user = {name: 'Administrator', age: 23, email:username};
-    this.name='Administrator';
-    this.userLogged = true;
-    return user;
-  }else{
-    return user;
+    user = new UserModel();
+    user.firstName = 'Administrator';
+    user.secondName = 'of';
+    user.firstLastname = 'System';
+    user.email = 'admin@gmail.com';
+    user.isLogged = true;
+    this.userInfo.next(user);
   }
+    return user;
 }
 }
