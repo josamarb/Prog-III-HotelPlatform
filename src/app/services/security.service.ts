@@ -7,22 +7,33 @@ import { UserModel } from '../models/user.model';
 })
 export class SecurityService {
   userInfo = new BehaviorSubject<UserModel>(new UserModel);
-  constructor() { }
-
+  constructor() {
+    this.verifyUserInSession();
+  }
+verifyUserInSession(){
+  let session = localStorage.getItem("activeUser");
+  if(session != undefined){
+    this.userInfo.next(JSON.parse(session));
+  }
+}
 getUserInfo(){
   return this.userInfo.asObservable();
 }
+
 loginUser(username: String, pass: String){
+  
+  let tb_user = JSON.parse(localStorage.getItem("tb_users"));
   let user = null;
-  if(username == "admin@gmail.com" && pass == "1234567890"){
-    user = new UserModel();
-    user.firstName = 'Administrator';
-    user.secondName = 'of';
-    user.firstLastname = 'System';
-    user.email = 'admin@gmail.com';
+  tb_user.forEach(u => {
+    if(u.email == username && u.password == pass){
+      user=u;
+    }
+  });
+  if(user != undefined){
     user.isLogged = true;
     this.userInfo.next(user);
+    localStorage.setItem("activeUser", JSON.stringify(user));
   }
-    return user;
+  return user;
 }
 }

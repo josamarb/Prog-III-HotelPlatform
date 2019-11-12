@@ -28,7 +28,8 @@ export class NavbarComponent implements OnInit {
                 this.updateInfo();});
   }
   updateInfo(){
+    let cosa = "En Sesión"
     this.userLogged = this.userInfo.isLogged;
-    this.userName = '';
+    this.userName = `${cosa} ${this.userInfo.firstName} ${this.userInfo.secondName} ${this.userInfo.firstLastName}`;
   }
 }
